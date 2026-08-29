@@ -1,0 +1,4 @@
+county,utility_id,utility_name,mwh_sold,county_weight
+Harris,55937,Entergy Texas Inc.,6639981.0,0.9343605606404554
+Harris,16638,"San Bernard Electric Coop, Inc",466463.0,0.06563943935954467
+Harris,8901,CenterPoint Energy,0.0,0.0

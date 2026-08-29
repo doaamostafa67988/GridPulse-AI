@@ -1,0 +1,25 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+
+# Secrets
+.env
+.streamlit/secrets.toml
+
+
+
+# OS
+.DS_Store
+
+# Next.js (web/ has its own .gitignore too, this covers a repo-root run)
+web/node_modules/
+web/.next/
+web/out/
+web/.env*
+!web/.env.local.example
+web/.vercel

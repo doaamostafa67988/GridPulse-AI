@@ -28,32 +28,33 @@ if (typeof window !== "undefined") {
 }
 
 /**
- * A minimal inline raster style (CARTO Positron tiles) instead of fetching
- * a full style JSON from basemaps.cartocdn.com. Fetching the remote style
- * document adds a network round-trip before the map can even start
- * rendering - on a slow or filtered connection that round-trip can hang
- * long enough that the map looks permanently blank, since grid/lines
+ * A minimal inline raster style (Esri Light Gray Canvas tiles) instead of
+ * fetching a full style JSON from a remote style endpoint. Fetching the
+ * remote style document adds a network round-trip before the map can even
+ * start rendering - on a slow or filtered connection that round-trip can
+ * hang long enough that the map looks permanently blank, since grid/lines
  * layers are only added inside map.on("load"), which never fires without
  * the style. An inline raster style still needs the tile images themselves
  * over the network, but starts requesting them immediately and renders
  * incrementally as tiles arrive, rather than blocking on one more document
- * first.
+ * first. Esri's ArcGIS Online tiles are used (instead of CARTO's
+ * basemaps.cartocdn.com) since CARTO's hosted tiles now require an
+ * account API key and otherwise render with an "API key required"
+ * watermark.
  */
 const LIGHT_STYLE: StyleSpecification = {
   version: 8,
   sources: {
-    "carto-light": {
+    "esri-light-gray": {
       type: "raster",
       tiles: [
-        "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-        "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-        "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+        "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
       ],
       tileSize: 256,
-      attribution: "© OpenStreetMap contributors © CARTO",
+      attribution: "© Esri",
     },
   },
-  layers: [{ id: "carto-light-layer", type: "raster", source: "carto-light" }],
+  layers: [{ id: "esri-light-gray-layer", type: "raster", source: "esri-light-gray" }],
 };
 
 const LOAD_TIMEOUT_MS = 8000;
@@ -107,7 +108,9 @@ export function MapView({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MLMap | null>(null);
   const onSelectZoneRef = useRef(onSelectZone);
-  onSelectZoneRef.current = onSelectZone;
+  useEffect(() => {
+    onSelectZoneRef.current = onSelectZone;
+  }, [onSelectZone]);
   const [status, setStatus] = useState<"loading" | "ready" | "timeout" | "error" | "unsupported">(
     "loading",
   );

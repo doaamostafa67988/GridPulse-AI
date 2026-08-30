@@ -82,7 +82,13 @@ def build_map_html(risk_table: pd.DataFrame, grid: gpd.GeoDataFrame, lines: gpd.
     center_point = grid_wgs.to_crs(PILOT_CRS).geometry.union_all().centroid
     center_wgs = gpd.GeoSeries([center_point], crs=PILOT_CRS).to_crs("EPSG:4326").iloc[0]
 
-    m = folium.Map(location=[center_wgs.y, center_wgs.x], zoom_start=12, tiles="CartoDB positron")
+    m = folium.Map(location=[center_wgs.y, center_wgs.x], zoom_start=12, tiles=None)
+    folium.TileLayer(
+        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+        attr="Esri",
+        name="Light Gray Canvas",
+        control=False,
+    ).add_to(m)
 
     colormap = cm.LinearColormap(
         colors=["#fee8c8", "#fdbb84", "#e34a33"],
